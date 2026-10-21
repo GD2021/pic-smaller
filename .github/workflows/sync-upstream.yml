@@ -1,0 +1,27 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    - cron: '0 20 * * *' # 每日 UTC 20:00（北京时间 04:00）
+  workflow_dispatch: # 支持手动触发
+
+permissions:
+  contents: write
+
+jobs:
+  sync-upstream:
+    name: Sync upstream changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Sync upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Starting sync upstream for GD2021/pic-smaller on branch main..."
+          gh repo sync GD2021/pic-smaller -b main
+          echo "Sync completed successfully."
